@@ -1,0 +1,40 @@
+#GA Southern at a Glance
+
+import scrapy 
+
+class ataglanceoSpider(scrapy.Spider):
+    name = "glance"
+    allowed_domains = ['news.georgiasouthern.edu']
+    
+    def start_requests(self):
+        start_urls = ['https://news.georgiasouthern.edu/at-a-glance/']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for statesboro in response.css('#content.landing.unit'):
+            yield {
+                'Page Title': response.css('h1.title::text').get(),
+                'Who is the school mascot?': response.css('#main > ul:nth-child(5) > li:nth-child(1)').get(),
+                'What are the names of the campuses?': response.css('#main > ul:nth-child(5) > li:nth-child(2)').get(),
+                'What is the statesboro student-teacher ratio?': response.css('#main > ul:nth-child(5) > li:nth-child(4)').get(),
+                'what are the armstrong & liberty student-teacher ratio?': response.css('#main > ul:nth-child(5) > li:nth-child(5)').get(),
+                
+                'What is the total enrollment number?': response.css('#main > ul:nth-child(7) > li:nth-child(1)').get(),
+                'What is the student profile for undergraduate students? ': response.css('#main > ul:nth-child(7) > li:nth-child(2)').get(),
+                'What is the student profile for graduate students?': response.css('#main > ul:nth-child(7) > li:nth-child(3)').get(),
+                'What is the student profile by state': response.css('#main > ul:nth-child(7) > li:nth-child(4)').get(),
+                
+                'What are the most popular majors?': response.css('#main > h3:nth-child(8)').get(),
+                
+                'What are the counties with largest enrollment?': response.css('#main > h3:nth-child(10)').get(),
+                
+                'What are the states with largest enrollment?': response.css('#main > h3:nth-child(12)').get(),
+                
+                'What are the most non-U.S. countries with largest enrollment': response.css('#main > h3:nth-child(14)').get(),
+                
+                'Is Georgia Southern University military friendly?': response.css('#main > ul:nth-child(19) > li:nth-child(1)').get(),
+                'Is Georgia Southern University diverse?': response.css('#main > ul:nth-child(19) > li:nth-child(6)').get(),
+                
+                }
