@@ -1,0 +1,25 @@
+import scrapy 
+
+class armstrongSpider(scrapy.Spider):
+    name = "armstrong"
+    allowed_domains = ['georgiasouthern.edu']
+    
+    def start_requests(self):
+        start_urls = ['https://www.georgiasouthern.edu/campuses/armstrong-campus/']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for armstrong in response.css('#content.landing'):
+            yield {
+                'Page Title': response.css('h1.title::text').get(),
+                'Can I have some information about Armstrong Campus?': response.css('p:nth-child(1)::text').get(),
+                'What are some good things about the Armstrong Campus': response.css('p:nth-child(2)::text').get(),
+                "What is the Armstrong Campus' Street Address" : response.css('div:nth-child(2) > p:nth-child(1)::text').get(),
+                'How do I contact the Armstrong Campus? :': response.css('div:nth-child(2) > p:nth-child(1) > a::attr(href)').get(),
+                'How do I contact advisment for the Armstrong Campus?: ' : response.css('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(1)').get(),
+                'How do I contact enrollment for the Armstrong Campus?: ' : response.css('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(2)').get(),
+                'How do I contact financial aid for the Armstrong Campus?: ': response.css ('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(6)').get(),
+                
+                }
