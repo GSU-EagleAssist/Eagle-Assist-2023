@@ -1,0 +1,24 @@
+#Scholarship
+
+import scrapy 
+
+class scholarshipSpider(scrapy.Spider):
+    name = "scholarship"
+    allowed_domains = ['admissions.georgiasouthern.edu/']
+    
+    def start_requests(self):
+        start_urls = ['https://admissions.georgiasouthern.edu/scholarships/']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for scholarship in response.css('#content.landing.admissions'):
+            yield {
+                'Page Title': response.css('h1.title::text').get(),
+                'Are there limited avaliblity for scholarships? :': response.css('#main > p:nth-child(10)::text').get(),
+                'How to apply for Georgia Southern Scholarships? :': response.css('#main > p:nth-child(9)::text').get(),
+                'What are the most valuable scholarships offered?: ': response.css('#main > ul').get(),
+                'What is the number for more scholarship information?: ': response.css('#main > p:nth-child(16)').get(),
+               
+                }
