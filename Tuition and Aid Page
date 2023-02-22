@@ -1,0 +1,24 @@
+#Tuition and Aid
+
+
+import scrapy
+
+class tuitionSpider(scrapy.Spider):
+    name = "tuition"
+    allowed_domains = ['admissions.georgiasouthern.edu']
+    
+    def start_requests(self):
+        start_urls = ['https://admissions.georgiasouthern.edu/tuition-aid/']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for scholarship in response.css('#content.landing.admissions'):
+            yield {
+                'What about tuition?': response.css('#main > div:nth-child(1) > p').get(),
+                'How to prepare financially in my junior year?': response.css('#main > p:nth-child(7)').get(),
+                'How to prepare financially in my senior year?': response.css('#main > ul:nth-child(9)').get(),
+                'Hpow to prepare financially as a transfer student?': response.css('#main > ul:nth-child(15) > li:nth-child(2)').get(),
+                'What are the scholarship deadlines?': response.css('#main > ul:nth-child(20)').get(),
+                }
