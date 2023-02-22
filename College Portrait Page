@@ -1,0 +1,20 @@
+
+import scrapy 
+
+class collegeportraitSpider(scrapy.Spider):
+    name = "collegep"
+    allowed_domains = ['georgiasouthern.edu']
+    
+    def start_requests(self):
+        start_urls = ['https://www.georgiasouthern.edu/collegeportrait/']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for scholarship in response.css('#content.landing'):
+            yield {
+                'What is VSA?': response.css('#main > div:nth-child(2) > p:nth-child(2)').get(),
+                'What are the benefits of the program?': response.css('#main > div:nth-child(2) > p:nth-child(3)').get(),
+               
+                }
