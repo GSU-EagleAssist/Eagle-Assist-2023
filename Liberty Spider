@@ -1,0 +1,26 @@
+#Liberty Spider
+
+import scrapy 
+
+class libertySpider(scrapy.Spider):
+    name = "liberty"
+    allowed_domains = ['georgiasouthern.edu']
+    
+    def start_requests(self):
+        start_urls = ['https://www.georgiasouthern.edu/campuses/liberty-campus/']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for liberty in response.css('#content.landing'):
+            yield {
+                'Page Title': response.css('h1.title::text').get(),
+                'Can I have some information about Liberty Campus': response.css('div:nth-child(1) > p:nth-child(1)::text').get(),
+                "What is the Liberty Campus' street address:" : response.css('div:nth-child(2) > p:nth-child(1)').get(),
+                'How do I contact the Liberty Campus? :': response.css('div:nth-child(2) > p:nth-child(1) > a').get(), 
+                'How do I contact advisement for the Liberty Campus: ' : response.css('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(1) > a').get(),
+                'How do I contact enrollment for the Liberty Campus: ' : response.css('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(2) > a').get(),
+                'How do I contact financial aid for the Liberty Campus?: ': response.css ('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(6) > a').get(),
+                
+                }
