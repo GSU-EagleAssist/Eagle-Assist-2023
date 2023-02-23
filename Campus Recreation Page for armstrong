@@ -1,0 +1,22 @@
+# Campus Recreation Page for armstrong
+
+import scrapy 
+
+class RecreationSpider(scrapy.Spider):
+    name = "recreation"
+    allowed_domains = ['recreation.georgiasouthern.edu']
+    
+    def start_requests(self):
+        start_urls = ['https://recreation.georgiasouthern.edu/armstrong/about/']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for recreation in response.css('#content.landing.unit'):
+            yield {
+                'Why is recreational activities important? :': response.css('#main > p:nth-child(11)').get(),
+                'How to contact Armstrong Recreation center?: ' : response.css('#main > p:nth-child(15)').get(),
+                'What is offered at the Armstrong Recreational center?:': response.css('#main > ul:nth-child(7)').get(),
+               
+                }
