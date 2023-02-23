@@ -1,0 +1,22 @@
+# Shooting Extracurricular
+
+import scrapy 
+
+class ShootingSpider(scrapy.Spider):
+    name = "shooting"
+    allowed_domains = ['recreation.georgiasouthern.edu']
+    
+    def start_requests(self):
+        start_urls = ['https://recreation.georgiasouthern.edu/ssec/about/#hours']
+        for url in start_urls:
+            yield scrapy.Request(url = url,callback = self.parse)
+                
+        
+    def parse(self, response):
+        for shooting in response.css('#content.landing.unit'):
+            yield {
+                'What is the shooting Sports Education Center?': response.css('#main > p:nth-child(4)').get(),
+                'What is offered at the Sports Education Center? ': response.css('#main > p:nth-child(5)').get(),
+                "What are the semester's' weekday hours for SSEC?": response.css('#tablepress-4 > tbody > tr.row-2.even').get(),
+                "Can anyone participate in SSEC?": response.css('#main > p:nth-child(7)').get(),
+                }
