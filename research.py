@@ -19,6 +19,6 @@ class ResearchSpider(scrapy.Spider):
             areas = response.css('div.wp-block-cover__inner-container')
             yield {
                 'Title': research.css('h1.title::text').get(),
-                'About' : research.css('p:nth-child(3)::text').get() + '\n\n' + response.css('#main > p:nth-child(4)::text').get(), 
-                'Impact Areas' : areas.css('a::text \n').getall()
-            }
+                'What do the research teams do?' : research.css('p:nth-child(3)::text').get() + '\n\n' + response.css('#main > p:nth-child(4)::text').get(), 
+                'What are the impact areas focused on? ' : areas.css('a::text \n').getall()
+            } 
