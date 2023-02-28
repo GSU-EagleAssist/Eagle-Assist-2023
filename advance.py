@@ -18,4 +18,4 @@ class advanceSpider(scrapy.Spider):
                 		'What is Materials Engineering, Processing, and Characterization?': advance.css('p:nth-child(9)::text').get(),
                 		'What is Additive Manufacturing' : advance.css('p:nth-child(11)::text').get(),
                 		'What is Plant Operations including Robotics and Automation' : advance.css('p:nth-child(13)::text').get()
-			}
+			} 
