@@ -14,7 +14,7 @@ class communitySpider(scrapy.Spider):
 		for community in response.css('#main'):
 			yield {
 				'What does this team research?' : community.css('p:nth-child(6)::text').get(),
-				'What does this team specialize in?' : community.css('h6:nth-child(8)::text').get() + community.css('h6:nth-child(10)::text').get() + community.css('h6 strong::text').get(),
+				'What does this team specialize in?' : community.css('h6:nth-child(8)::text').get() + ',\n' + community.css('h6:nth-child(10)::text').get() + ',\n' + community.css('h6 strong::text').get(),
 				'What is Civic Infrastructures and Public Services?' : community.css('p:nth-child(9)::text').get(),
 				'What is Community Health and Wellbeing?' : community.css('p:nth-child(11)::text').get(),
 				'What do they mean by Quality of Life?' : community.css('p:nth-child(13)::text').get()
