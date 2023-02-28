@@ -18,4 +18,4 @@ class communitySpider(scrapy.Spider):
 				'What is Civic Infrastructures and Public Services?' : community.css('p:nth-child(9)::text').get(),
 				'What is Community Health and Wellbeing?' : community.css('p:nth-child(11)::text').get(),
 				'What do they mean by Quality of Life?' : community.css('p:nth-child(13)::text').get()
-			} 
+			}
