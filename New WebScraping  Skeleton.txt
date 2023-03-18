@@ -5,7 +5,7 @@ class nameSpider(scrapy.Spider):
 	name = ""
 	
 	custom_settings = {
-        'FEEDS': { 'FileName.csv': { 'format': 'csv', 'overwrite': 'True',}}
+        'FEEDS': { 'Holistic-Fitness.csv': { 'format': 'csv', 'overwrite': 'True', 'item_export_kwargs': {'include_headers_line': False,}}},
         }
 
 	def start_requests(self):
