@@ -19,26 +19,26 @@ class nameSpider(scrapy.Spider):
 		for name in response.css('#main'):
 
 			q1 = chatbotEntry()
-			q1['Question'] = '',
+			q1['Question'] = '""',
 			q1['Answer'] = name.css('').get(),
 			yield q1
 			
 			q2 = chatbotEntry()
-			q2['Question'] = '',
+			q2['Question'] = '""',
 			q2['Answer'] = name.css('').getall(),
 			yield q2
 
 			q3 = chatbotEntry()
-			q3['Question'] = '',
+			q3['Question'] = '""',
 			q3['Answer'] = name.css('').get(),
 			yield q3
 
 			q4 = chatbotEntry()
-			q4['Question'] = '',
+			q4['Question'] = '""',
 			q4['Answer'] = name.css('').get(),
 			yield q3
 
 			q5 = chatbotEntry()
-			q5['Question'] = '', 
+			q5['Question'] = '""', 
 			q5['Answer'] = name.css('').get(), 
 			yield q5
