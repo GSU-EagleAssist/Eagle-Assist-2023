@@ -1,25 +1,47 @@
 import scrapy 
+from ..items import chatbotEntry
 
 class armstrongSpider(scrapy.Spider):
     name = "armstrong"
     allowed_domains = ['georgiasouthern.edu']
+    custom_settings = {
+        'FEEDS': { 'armstrong.csv': { 'format': 'csv', 'overwrite': 'True', 'item_export_kwargs': {'include_headers_line': False,}}},
+    
+                  }
     
     def start_requests(self):
         start_urls = ['https://www.georgiasouthern.edu/campuses/armstrong-campus/']
-        for url in start_urls:
-            yield scrapy.Request(url = url,callback = self.parse)
-                
-        
+        for url in start_urls: yield scrapy.Request(url = url, callback = self.parse)
+
+
     def parse(self, response):
         for armstrong in response.css('#content.landing'):
-            yield {
-                'Page Title': response.css('h1.title::text').get(),
-                'Can I have some information about Armstrong Campus?': response.css('p:nth-child(1)::text').get(),
-                'What are some good things about the Armstrong Campus': response.css('p:nth-child(2)::text').get(),
-                "What is the Armstrong Campus' Street Address" : response.css('div:nth-child(2) > p:nth-child(1)::text').get(),
-                'How do I contact the Armstrong Campus? :': response.css('div:nth-child(2) > p:nth-child(1) > a::attr(href)').get(),
-                'How do I contact advisment for the Armstrong Campus?: ' : response.css('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(1)').get(),
-                'How do I contact enrollment for the Armstrong Campus?: ' : response.css('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(2)').get(),
-                'How do I contact financial aid for the Armstrong Campus?: ': response.css ('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(6)').get(),
-                
-                }
+            q1 = chatbotEntry()
+            q1['Question'] = 'Can I have some information about Armstrong Campus?',
+            q1['Answer'] = armstrong.css('p:nth-child(1)::text').get(),
+            yield q1
+			
+            q2 = chatbotEntry()
+            q2['Question'] = 'What are some good things about the Armstrong Campus?',
+            q2['Answer'] = armstrong.css('p:nth-child(2)::text').get(),
+            yield q2
+
+            q3 = chatbotEntry()
+            q3['Question'] = "What is the Armstrong Campus' Street Address?",
+            q3['Answer'] = armstrong.css('div:nth-child(2) > p:nth-child(1)::text').get(),
+            yield q3
+
+            q4 = chatbotEntry()
+            q4['Question'] = 'How do I contact advisment for the Armstrong Campus?', 
+            q4['Answer'] = armstrong.css('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(1) a::text').get(), 
+            yield q4
+            
+            q5 = chatbotEntry()
+            q5['Question'] = 'How do I contact enrollment for the Armstrong Campus?', 
+            q5['Answer'] = armstrong.css('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(2) a::text').get(), 
+            yield q5
+            
+            q6 = chatbotEntry()
+            q6['Question'] = 'How do I contact financial aid for the Armstrong Campus?', 
+            q6['Answer'] = armstrong.css('div:nth-child(1) > div.is-layout-flex.wp-container-6.wp-block-columns > div:nth-child(2) > ul > li:nth-child(6) a::text').get(), 
+            yield q6
