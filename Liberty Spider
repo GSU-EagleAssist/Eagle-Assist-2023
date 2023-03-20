@@ -1,26 +1,47 @@
-#Liberty Spider
-
+#liberty spider
 import scrapy 
+from ..items import chatbotEntry
 
 class libertySpider(scrapy.Spider):
     name = "liberty"
     allowed_domains = ['georgiasouthern.edu']
+    custom_settings = {
+        'FEEDS': { 'liberty.csv': { 'format': 'csv', 'overwrite': 'True', 'item_export_kwargs': {'include_headers_line': False,}}},
+        }
     
     def start_requests(self):
         start_urls = ['https://www.georgiasouthern.edu/campuses/liberty-campus/']
-        for url in start_urls:
-            yield scrapy.Request(url = url,callback = self.parse)
-                
-        
+        for url in start_urls: yield scrapy.Request(url = url, callback = self.parse)
+
+
     def parse(self, response):
         for liberty in response.css('#content.landing'):
-            yield {
-                'Page Title': response.css('h1.title::text').get(),
-                'Can I have some information about Liberty Campus': response.css('div:nth-child(1) > p:nth-child(1)::text').get(),
-                "What is the Liberty Campus' street address:" : response.css('div:nth-child(2) > p:nth-child(1)').get(),
-                'How do I contact the Liberty Campus? :': response.css('div:nth-child(2) > p:nth-child(1) > a').get(), 
-                'How do I contact advisement for the Liberty Campus: ' : response.css('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(1) > a').get(),
-                'How do I contact enrollment for the Liberty Campus: ' : response.css('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(2) > a').get(),
-                'How do I contact financial aid for the Liberty Campus?: ': response.css ('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(6) > a').get(),
-                
-                }
+            q1 = chatbotEntry()
+            q1['Question'] = 'Can I have some information about Liberty Campus?',
+            q1['Answer'] = liberty.css('div:nth-child(1) > p:nth-child(1)::text').get(),
+            yield q1
+            
+            q2 = chatbotEntry()
+            q2['Question'] = "What is the Liberty Campus' street address?",
+            q2['Answer'] = liberty.css('div:nth-child(2) > p:nth-child(1)::text').getall(),
+            yield q2
+
+            q3 = chatbotEntry()
+            q3['Question'] = "How do I contact the Liberty Campus?",
+            q3['Answer'] = liberty.css('div:nth-child(2) > p:nth-child(1) > a::text').get(),
+            yield q3
+
+            q4 = chatbotEntry()
+            q4['Question'] = 'How do I contact advisement for the Liberty Campus?', 
+            q4['Answer'] = liberty.css('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(1) > a::text').get(), 
+            yield q4
+            
+            q5 = chatbotEntry()
+            q5['Question'] = 'How do I contact enrollment for the Liberty Campus?', 
+            q5['Answer'] = liberty.css('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(2) > a::text').get(), 
+            yield q5
+            
+            q6 = chatbotEntry()
+            q6['Question'] = 'How do I contact financial aid for the Liberty Campus?', 
+            q6['Answer'] = liberty.css('div:nth-child(1) > div > div:nth-child(1) > ul > li:nth-child(6) > a::text').get(), 
+            yield q6
