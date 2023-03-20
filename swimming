@@ -1,0 +1,59 @@
+# Swimming Lessons
+
+import scrapy 
+from ..items import chatbotEntry
+
+class SwimmingSpider(scrapy.Spider):
+    name = "swimming"
+    allowed_domains = ['recreation.georgiasouthern.edu']
+    custom_settings = {
+        'FEEDS': { 'swimming.csv': { 'format': 'csv', 'overwrite': 'True', 'item_export_kwargs': {'include_headers_line': False,}}},
+        }
+    
+    def start_requests(self):
+        start_urls = ['https://recreation.georgiasouthern.edu/aquatics/aquatic-programs/swim-lessons/']
+        for url in start_urls: yield scrapy.Request(url = url, callback = self.parse)
+
+
+    def parse(self, response):
+        for swimming in response.css('#content.landing.unit'):
+            q1 = chatbotEntry()
+            q1['Question'] = 'Who are able to take swimming lessons?',
+            q1['Answer'] = swimming.css('#main > p:nth-child(3)::text').get(),
+            yield q1
+            
+            q2 = chatbotEntry()
+            q2['Question'] = "What is taught to me if I am a beginner at swimming?",
+            q2['Answer'] = swimming.css('#main > p:nth-child(4)::text').getall(),
+            yield q2
+
+            q3 = chatbotEntry()
+            q3['Question'] = "What is taught if I already know how to swim?",
+            q3['Answer'] = swimming.css('#main > p:nth-child(5)::text').get(),
+            yield q3
+
+            q4 = chatbotEntry()
+            q4['Question'] = 'What is taught if I am an advanced swimmer?', 
+            q4['Answer'] = swimming.css('#main > p:nth-child(6)::text').get(), 
+            yield q4
+            
+            q5 = chatbotEntry()
+            q5['Question'] = 'How to register for swim classes?', 
+            q5['Answer'] = swimming.css('#main > p:nth-child(9)::text').get(), 
+            yield q5
+            
+            q6 = chatbotEntry()
+            q6['Question'] = 'Who to contact for more information on swimming classes?', 
+            q6['Answer'] = swimming.css('#main > p:nth-child(10)::text').get(), 
+            yield q6
+            
+            q7 = chatbotEntry()
+            q7['Question'] = 'How much are group swimming lessons?', 
+            q7['Answer'] = swimming.css('#main > div.is-layout-flex.wp-container-3.wp-block-columns > div:nth-child(1) p::text').get(), 
+            yield q7
+            
+            
+            q8 = chatbotEntry()
+            q8['Question'] = 'How are private swimming lessons scheduled?', 
+            q8['Answer'] = swimming.css('#main > p:nth-child(20)::text').get(), 
+            yield q8
