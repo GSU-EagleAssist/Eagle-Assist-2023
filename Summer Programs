@@ -1,24 +1,43 @@
-# Summer Programs
-
+#summer spider
 import scrapy 
+from ..items import chatbotEntry
 
 class SummerProgramSpider(scrapy.Spider):
     name = "summer"
     allowed_domains = ['recreation.georgiasouthern.edu']
+    custom_settings = {
+        'FEEDS': { 'summer.csv': { 'format': 'csv', 'overwrite': 'True', 'item_export_kwargs': {'include_headers_line': False,}}},
+        }
     
     def start_requests(self):
         start_urls = ['https://recreation.georgiasouthern.edu/summer/']
-        for url in start_urls:
-            yield scrapy.Request(url = url,callback = self.parse)
-                
-        
+        for url in start_urls: yield scrapy.Request(url = url, callback = self.parse)
+
+
     def parse(self, response):
         for summer in response.css('#content.landing.unit'):
-            yield {
-                'What Youth summer programs are offered at the Armstrong Campus?': response.css('#main > p:nth-child(4)').get(),
-                'Does Georgia Southern offer swimming lessons for the youth?': response.css('#main > p:nth-child(8)').get(),
-                'What program are offered by the Statesboro Campus?': response.css('#main > div:nth-child(7) > div > a::text').get(),
-                'What other programs are offered?': response.css('#main > div:nth-child(11) > div > a::text').get(),
-                'Can I have more information about shooting sports?': response.css('#main > p:nth-child(12)').get(),
-               
-                }
+            q1 = chatbotEntry()
+            q1['Question'] = 'What Youth summer programs are offered at the Armstrong Campus?',
+            q1['Answer'] = summer.css('#main > p:nth-child(4)::text').get(),
+            yield q1
+            
+            q2 = chatbotEntry()
+            q2['Question'] = "Does Georgia Southern offer swimming lessons for the youth?",
+            q2['Answer'] = summer.css('#main > p:nth-child(8)::text').getall(),
+            yield q2
+
+            q3 = chatbotEntry()
+            q3['Question'] = "What program are offered by the Statesboro Campus?",
+            q3['Answer'] = summer.css('#main > div:nth-child(7) > div > a::text').get(),
+            yield q3
+
+            q4 = chatbotEntry()
+            q4['Question'] = 'What other programs are offered?', 
+            q4['Answer'] = summer.css('#main > div:nth-child(11) > div > a::text').get(), 
+            yield q4
+            
+            q5 = chatbotEntry()
+            q5['Question'] = 'Can I have more information about shooting sports?', 
+            q5['Answer'] = summer.css('#main > p:nth-child(12)::text').get(), 
+            yield q5
+            
