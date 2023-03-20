@@ -1,0 +1,84 @@
+
+#abt cri spider
+import scrapy 
+from ..items import chatbotEntry
+
+class criSpider(scrapy.Spider):
+    name = "cri"
+    allowed_domains = ['recreation.georgiasouthern.edu']
+    custom_settings = {
+        'FEEDS': { 'cri.csv': { 'format': 'csv', 'overwrite': 'True', 'item_export_kwargs': {'include_headers_line': False,}}},
+        }
+    
+    def start_requests(self):
+        start_urls = ['https://recreation.georgiasouthern.edu/about-cri/']
+        for url in start_urls: yield scrapy.Request(url = url, callback = self.parse)
+
+
+    def parse(self, response):
+        for cri in response.css('#content.landing.unit'):
+            q1 = chatbotEntry()
+            q1['Question'] = 'What is the purpose of CRI?',
+            q1['Answer'] = cri.css('#main > p:nth-child(6)::text').get(),
+            yield q1
+            
+            q2 = chatbotEntry()
+            q2['Question'] = "What are the programs CRI have to offer?",
+            q2['Answer'] = cri.css('#main > p:nth-child(18)::text').getall(),
+            yield q2
+
+            q3 = chatbotEntry()
+            q3['Question'] = "Where is the Statesboro recreation center located?",
+            q3['Answer'] = cri.css('#inner-wrapper > div.row.local-footer > div > div > p:nth-child(2)::text').get(), 
+            yield q3
+
+            q4 = chatbotEntry()
+            q4['Question'] = 'Where is the Armstrong recreation center located?', 
+            q4['Answer'] = cri.css('#inner-wrapper > div.row.local-footer > div > div > p:nth-child(3)::text').get(), 
+            yield q4
+            
+            q5 = chatbotEntry()
+            q5['Question'] = 'Tell me more about aquatics?', 
+            q5['Answer'] = cri.css('#main > p:nth-child(20)::text').get(), 
+            yield q5
+            
+            q6 = chatbotEntry()
+            q6['Question'] = 'Tell me more about club sports?', 
+            q6['Answer'] = cri.css('#main > p:nth-child(22)::text').get(), 
+            yield q6
+            
+            q7 = chatbotEntry()
+            q7['Question'] = 'Tell me more about golf?', 
+            q7['Answer'] = cri.css('#main > p:nth-child(26)::text').get(), 
+            yield q7
+            
+            q8 = chatbotEntry()
+            q8['Question'] = 'Tell me more about the fitness program?', 
+            q8['Answer'] = cri.css('#main > p:nth-child(24)::text').get(), 
+            yield q8
+            
+            q7 = chatbotEntry()
+            q7['Question'] = 'Tell me more about Informal Recreation?', 
+            q7['Answer'] = cri.css('#main > p:nth-child(28)::text').get(), 
+            yield q7
+            
+            q8 = chatbotEntry()
+            q8['Question'] = 'Tell me more about the Shooting Sports Education Center (SSEC)?', 
+            q8['Answer'] = cri.css('#main > p:nth-child(32)::text').get(), 
+            yield q8
+            
+            q9 = chatbotEntry()
+            q9['Question'] = 'Tell me more about Intramural Sports?', 
+            q9['Answer'] = cri.css('#main > p:nth-child(30)::text').get(), 
+            yield q9
+            
+            
+            q12 = chatbotEntry()
+            q12['Question'] = 'Tell me more about Southern Adventures?', 
+            q12['Answer'] = cri.css('#main > p:nth-child(34)::text').get(), 
+            yield q12
+            
+            q13 = chatbotEntry()
+            q13['Question'] = 'Tell me more about the Wellness Program?', 
+            q13['Answer'] = cri.css('#main > p:nth-child(36)::text').get(), 
+            yield q13
