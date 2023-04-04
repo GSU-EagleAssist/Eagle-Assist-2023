@@ -1,8 +1,12 @@
 import scrapy
-
+from ..items import chatbotEntry
 
 class ResearchSpider(scrapy.Spider):
     name = 'research'
+
+    custom_settings = {
+        'FEEDS': { 'Research-Teams.csv': { 'format': 'csv', 'overwrite': 'True', 'item_export_kwargs': {'include_headers_line': False,}}},
+        }
     
     def start_requests(self):
      allowed_domains = ['https://research.georgiasouthern.edu']
@@ -17,8 +21,8 @@ class ResearchSpider(scrapy.Spider):
     def parse(self, response):
         for research in response.css('#main'):
             areas = response.css('div.wp-block-cover__inner-container')
-            yield {
-                'Title': research.css('h1.title::text').get(),
-                'What do the research teams do?' : research.css('p:nth-child(3)::text').get() + '\n\n' + response.css('#main > p:nth-child(4)::text').get(), 
-                'What are the impact areas focused on? ' : areas.css('a::text \n').getall()
-            }
+            
+            q1 = chatbotEntry()
+            q1['Question'] = '"What research teams does the school have?"',
+            q1['Answer'] = areas.css('a::text \n').getall(),
+            yield q1
