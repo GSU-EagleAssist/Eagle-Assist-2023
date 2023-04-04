@@ -41,4 +41,4 @@ class coastalSpider(scrapy.Spider):
 			q5 = chatbotEntry()
 			q5['Question'] = '"What are Water Resources?"', 
 			q5['Answer'] = coastal.css('p:nth-child(16)::text').get()
-			yield q5
+			yield q5 
